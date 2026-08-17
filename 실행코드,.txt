@@ -1,0 +1,43 @@
+1. EDA (실제 MIND 데이터 필요)
+bash
+cd deepretrieval_mind/code/data_preprocess
+python mind_eda.py \
+    --behaviors /path/to/real/behaviors.tsv \
+    --news /path/to/real/news.tsv \
+    --outdir ./eda_out
+
+
+2. 데이터 전처리 (샘플로 바로 dry-run 가능)
+bash
+cd deepretrieval_mind/code/data_preprocess
+python mind_feedback.py \
+    --behaviors ../../sample_data/behaviors.tsv \
+    --news ../../sample_data/news.tsv \
+    --outdir ../../sample_out \
+    --max_history 10 --min_candidates 2 --test_ratio 0.25
+
+
+3. Reward 함수 단위 테스트
+bash
+cd deepretrieval_mind/code/verl/utils/reward_score
+python -m pytest tests/test_mind_feedback.py -v
+
+
+4. 전처리 → Reward 엔드투엔드 확인 (선택, 결과물이 잘 이어지는지 직접 눈으로 보고 싶을 때)
+bash
+cd deepretrieval_mind
+python3 -c "
+import sys, pandas as pd
+sys.path.insert(0, 'code/verl/utils/reward_score')
+from mind_feedback import compute_score
+
+df = pd.read_parquet('sample_out/train.parquet')
+row = df.iloc[0]
+gt_str = row['reward_model']['ground_truth']
+
+good = '<think>추론 내용</think><answer>검색 쿼리</answer>'
+bad_format = '태그 없는 텍스트'
+
+print('good:', compute_score(row['data_source'], good, gt_str, row['extra_info']))
+print('bad_format:', compute_score(row['data_source'], bad_format, gt_str, row['extra_info']))
+"

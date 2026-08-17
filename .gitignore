@@ -1,0 +1,33 @@
+# 가상환경
+venv/
+env/
+.venv/
+ENV/
+
+# 파이썬 캐시 및 컴파일 파일
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 주피터 노트북 체크포인트
+.ipynb_checkpoints/
+
+# 대용량 데이터 및 전처리 결과 파일 (Git에 올리지 않을 데이터)
+data/
+*.parquet
+*.tsv
+*.csv
+*.json
+
+# IDE 설정 (VS Code, PyCharm 등)
+.vscode/
+.idea/
+
+# 운영체제 파일
+.DS_Store
+Thumbs.db
+
+# 로그 및 임시 파일
+*.log
+tmp/
